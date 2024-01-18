@@ -107,7 +107,7 @@ export class AuthService {
       },
       {
         secret: process.env.AT_SECRET,
-        expiresIn: '15m',
+        expiresIn: process.env.AT_EXPIRES_IN ?? '15m',
       },
     );
   }
@@ -120,7 +120,7 @@ export class AuthService {
       },
       {
         secret: process.env.RT_SECRET,
-        expiresIn: '1w',
+        expiresIn: process.env.RT_EXPIRES_IN ?? '1w',
       },
     );
   }
