@@ -19,5 +19,17 @@ model User {
   password  String
   refreshToken String?
 
+  roles    Role[]
+
   @@map("users")
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @map("role")
+  userId    Int
+  
+  user     User      @relation(fields: [userId], references: [id])
+  
+  @@map("roles")
 }
