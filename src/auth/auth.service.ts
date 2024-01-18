@@ -4,6 +4,7 @@ import { AuthDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { AccessToken, Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from 'prisma/role';
 
 @Injectable()
 export class AuthService {
@@ -21,11 +22,27 @@ export class AuthService {
       },
     });
 
+    const newUserRoles = await this.prismaService.role.create({
+      data: {
+        userId: newUser.id,
+        name: Role.Botanist,
+      },
+      select: {
+        name: true,
+      },
+    });
+
+    const userRoles = [newUserRoles.name];
+
     const refresh_token = await this.generateRtToken(newUser.id, newUser.email);
     await this.updateRtHash(newUser.id, refresh_token);
 
     return {
-      access_token: await this.generateAtToken(newUser.id, newUser.email),
+      access_token: await this.generateAtToken(
+        newUser.id,
+        newUser.email,
+        userRoles,
+      ),
       refresh_token,
     };
   }
@@ -35,7 +52,16 @@ export class AuthService {
       where: {
         email: authDto.email,
       },
+      include: {
+        roles: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
+
+    const userRoles = user.roles.map((role) => role.name);
 
     if (!user) throw new ForbiddenException('Invalid credentials');
 
@@ -46,7 +72,7 @@ export class AuthService {
     await this.updateRtHash(user.id, refresh_token);
 
     return {
-      access_token: await this.generateAtToken(user.id, user.email),
+      access_token: await this.generateAtToken(user.id, user.email, userRoles),
       refresh_token,
     };
   }
@@ -70,7 +96,16 @@ export class AuthService {
       where: {
         id: userId,
       },
+      include: {
+        roles: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
+
+    const userRoles = user.roles.map((role) => role.name);
 
     if (!user || !user.refreshToken)
       throw new ForbiddenException('Invalid credentials');
@@ -79,7 +114,7 @@ export class AuthService {
     if (!isRtValid) throw new ForbiddenException('Invalid credentials');
 
     return {
-      access_token: await this.generateAtToken(user.id, user.email),
+      access_token: await this.generateAtToken(user.id, user.email, userRoles),
     };
   }
 
@@ -99,11 +134,12 @@ export class AuthService {
     return bcrypt.hash(data, 10);
   }
 
-  private generateAtToken(userId: number, email: string) {
+  private generateAtToken(userId: number, email: string, roles: string[]) {
     return this.jwtService.signAsync(
       {
         sub: userId,
         email,
+        roles,
       },
       {
         secret: process.env.AT_SECRET,
