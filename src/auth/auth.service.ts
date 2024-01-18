@@ -61,8 +61,6 @@ export class AuthService {
       },
     });
 
-    const userRoles = user.roles.map((role) => role.name);
-
     if (!user) throw new ForbiddenException('Invalid credentials');
 
     const isPasswordValid = bcrypt.compare(authDto.password, user.password);
@@ -70,6 +68,8 @@ export class AuthService {
 
     const refresh_token = await this.generateRtToken(user.id, user.email);
     await this.updateRtHash(user.id, refresh_token);
+
+    const userRoles = user.roles.map((role) => role.name);
 
     return {
       access_token: await this.generateAtToken(user.id, user.email, userRoles),
@@ -105,13 +105,13 @@ export class AuthService {
       },
     });
 
-    const userRoles = user.roles.map((role) => role.name);
-
     if (!user || !user.refreshToken)
       throw new ForbiddenException('Invalid credentials');
 
     const isRtValid = await bcrypt.compare(rt, user.refreshToken);
     if (!isRtValid) throw new ForbiddenException('Invalid credentials');
+
+    const userRoles = user.roles.map((role) => role.name);
 
     return {
       access_token: await this.generateAtToken(user.id, user.email, userRoles),
