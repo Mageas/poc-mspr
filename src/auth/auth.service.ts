@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as bcrypt from 'bcrypt';
-import { Tokens } from './types';
+import { AccessToken, Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -21,9 +21,13 @@ export class AuthService {
       },
     });
 
-    const tokens = await this.generateTokens(newUser.id, newUser.email);
-    await this.updateRtHash(newUser.id, tokens.refresh_token);
-    return tokens;
+    const refresh_token = await this.generateRtToken(newUser.id, newUser.email);
+    await this.updateRtHash(newUser.id, refresh_token);
+
+    return {
+      access_token: await this.generateAtToken(newUser.id, newUser.email),
+      refresh_token,
+    };
   }
 
   async signin(authDto: AuthDto): Promise<Tokens> {
@@ -38,9 +42,13 @@ export class AuthService {
     const isPasswordValid = bcrypt.compare(authDto.password, user.password);
     if (!isPasswordValid) throw new ForbiddenException('Invalid credentials');
 
-    const tokens = await this.generateTokens(user.id, user.email);
-    await this.updateRtHash(user.id, tokens.refresh_token);
-    return tokens;
+    const refresh_token = await this.generateRtToken(user.id, user.email);
+    await this.updateRtHash(user.id, refresh_token);
+
+    return {
+      access_token: await this.generateAtToken(user.id, user.email),
+      refresh_token,
+    };
   }
 
   async logout(userId: number) {
@@ -57,7 +65,7 @@ export class AuthService {
     });
   }
 
-  async refreshTokens(userId: number, rt: string) {
+  async refreshTokens(userId: number, rt: string): Promise<AccessToken> {
     const user = await this.prismaService.user.findUnique({
       where: {
         id: userId,
@@ -70,9 +78,9 @@ export class AuthService {
     const isRtValid = await bcrypt.compare(rt, user.refreshToken);
     if (!isRtValid) throw new ForbiddenException('Invalid credentials');
 
-    const tokens = await this.generateTokens(user.id, user.email);
-    await this.updateRtHash(user.id, tokens.refresh_token);
-    return tokens;
+    return {
+      access_token: await this.generateAtToken(user.id, user.email),
+    };
   }
 
   private async updateRtHash(userId: number, rt: string) {
@@ -91,33 +99,29 @@ export class AuthService {
     return bcrypt.hash(data, 10);
   }
 
-  private async generateTokens(userId: number, email: string) {
-    const [access_token, refresh_token] = await Promise.all([
-      this.jwtService.signAsync(
-        {
-          sub: userId,
-          email,
-        },
-        {
-          secret: process.env.AT_SECRET,
-          expiresIn: '15m',
-        },
-      ),
-      this.jwtService.signAsync(
-        {
-          sub: userId,
-          email,
-        },
-        {
-          secret: process.env.RT_SECRET,
-          expiresIn: '1w',
-        },
-      ),
-    ]);
+  private generateAtToken(userId: number, email: string) {
+    return this.jwtService.signAsync(
+      {
+        sub: userId,
+        email,
+      },
+      {
+        secret: process.env.AT_SECRET,
+        expiresIn: '15m',
+      },
+    );
+  }
 
-    return {
-      access_token,
-      refresh_token,
-    };
+  private generateRtToken(userId: number, email: string) {
+    return this.jwtService.signAsync(
+      {
+        sub: userId,
+        email,
+      },
+      {
+        secret: process.env.RT_SECRET,
+        expiresIn: '1w',
+      },
+    );
   }
 }
