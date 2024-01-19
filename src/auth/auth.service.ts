@@ -14,6 +14,14 @@ export class AuthService {
   ) {}
 
   async signup(authDto: AuthDto): Promise<Tokens> {
+    const findUser = await this.prismaService.user.findUnique({
+      where: {
+        email: authDto.email,
+      },
+    });
+
+    if (findUser) throw new ForbiddenException('User already exists');
+
     const hashedPassword = await this.hashData(authDto.password);
     const newUser = await this.prismaService.user.create({
       data: {
@@ -25,7 +33,7 @@ export class AuthService {
     const newUserRoles = await this.prismaService.role.create({
       data: {
         userId: newUser.id,
-        name: Role.Botanist,
+        name: Role.Owner,
       },
       select: {
         name: true,
