@@ -71,7 +71,10 @@ export class AuthService {
 
     if (!user) throw new ForbiddenException('Invalid credentials');
 
-    const isPasswordValid = bcrypt.compare(authDto.password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      authDto.password,
+      user.password,
+    );
     if (!isPasswordValid) throw new ForbiddenException('Invalid credentials');
 
     const refresh_token = await this.generateRtToken(user.id, user.email);
