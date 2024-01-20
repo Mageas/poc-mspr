@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { users } from './users.seed';
-import { status } from './status.seed';
+import { statuses } from './statuses.seed';
 import * as bcrypt from 'bcrypt';
 import { species } from './species.seed';
 
@@ -19,7 +19,7 @@ async function load() {
       });
     });
 
-    status.forEach(async (status) => {
+    statuses.forEach(async (status) => {
       await prisma.plantStatus.create({
         data: status,
       });

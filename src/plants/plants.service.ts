@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePlantDto, ReturnPlantDto } from './dto';
 import { UpdatePlantDto } from './dto/updatePlantDto';
 import { AddressesService } from 'src/addresses/addresses.service';
-import { PlantStatusService } from 'src/plant-status/plant-status.service';
+import { PlantStatusService } from 'src/plant-statuses/plant-statuses.service';
 import { PlantSpeciesService } from 'src/plant-species/plant-species.service';
 
 const select = {

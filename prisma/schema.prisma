@@ -91,7 +91,7 @@ model PlantStatus {
 
   plants    Plant[]
 
-  @@map("plant_status")
+  @@map("plant_statuses")
 }
 
 model PlantSpecies {

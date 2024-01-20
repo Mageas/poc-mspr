@@ -6,7 +6,7 @@ import { UsersModule } from './users/users.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { PlantsModule } from './plants/plants.module';
-import { PlantStatusModule } from './plant-status/plant-status.module';
+import { PlantStatusModule } from './plant-statuses/plant-statuses.module';
 import { PlantSpeciesModule } from './plant-species/plant-species.module';
 
 @Module({

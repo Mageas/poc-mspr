@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PlantStatusController } from './plant-status.controller';
-import { PlantStatusService } from './plant-status.service';
+import { PlantStatusController } from './plant-statuses.controller';
+import { PlantStatusService } from './plant-statuses.service';
 
 @Module({
   controllers: [PlantStatusController],

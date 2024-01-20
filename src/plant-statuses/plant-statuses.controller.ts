@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
-import { PlantStatusService } from './plant-status.service';
+import { PlantStatusService } from './plant-statuses.service';
 
-@Controller('plant-status')
+@Controller('plant-statuses')
 export class PlantStatusController {
   constructor(private readonly plantStatusService: PlantStatusService) {}
 

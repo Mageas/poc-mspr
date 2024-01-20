@@ -1,4 +1,4 @@
-export enum PlantStatus {
+export enum PlantStatuses {
   Healthy = 'HEALTHY',
   Sick = 'SICK',
   Injured = 'INJURED',
