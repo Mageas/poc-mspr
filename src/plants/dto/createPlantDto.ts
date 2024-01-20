@@ -8,4 +8,12 @@ export class CreatePlantDto {
   @IsNotEmpty()
   @IsString()
   addressId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  statusId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  speciesId: string;
 }

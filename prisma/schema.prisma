@@ -74,6 +74,10 @@ model Plant {
   user      User     @relation(fields: [userId], references: [id])
   addressId Int
   address   Address  @relation(fields: [addressId], references: [id])
+  statusId  Int
+  status    PlantStatus @relation(fields: [statusId], references: [id])
+  speciesId Int
+  species   PlantSpecies @relation(fields: [speciesId], references: [id])
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -85,12 +89,16 @@ model PlantStatus {
   id        Int      @id @default(autoincrement())
   name      String
 
+  plants    Plant[]
+
   @@map("plant_status")
 }
 
 model PlantSpecies {
   id        Int      @id @default(autoincrement())
   name      String
+
+  plants    Plant[]
 
   @@map("plant_species")
 }

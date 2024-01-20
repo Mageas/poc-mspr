@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -7,5 +7,15 @@ export class PlantSpeciesService {
 
   async findAll() {
     return await this.prismaService.plantSpecies.findMany();
+  }
+
+  async isSpeciesValid(speciesId: number) {
+    const species = await this.prismaService.plantSpecies.findUnique({
+      where: { id: speciesId },
+    });
+
+    if (!species) {
+      throw new UnauthorizedException('This plant species does not exist');
+    }
   }
 }
