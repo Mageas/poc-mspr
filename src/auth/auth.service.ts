@@ -110,7 +110,7 @@ export class AuthService {
 
     const session = await this.sessionsServices.findByUserId(userId);
 
-    if (!user || !session.token)
+    if (!user || !session?.token)
       throw new ForbiddenException('Invalid credentials');
 
     const isRtValid = await bcrypt.compare(rt, session.token);
