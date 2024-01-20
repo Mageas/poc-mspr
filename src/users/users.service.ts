@@ -38,9 +38,7 @@ export class UsersService {
   }
 
   async update(paramId: number, userId: number, updateUserDto: UpdateUserDto) {
-    if (paramId !== userId) {
-      throw new UnauthorizedException();
-    }
+    await this.isUserOwner(userId, paramId);
 
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
@@ -53,10 +51,14 @@ export class UsersService {
   }
 
   async delete(paramId: number, userId: number) {
-    if (paramId !== userId) {
-      throw new UnauthorizedException();
-    }
+    await this.isUserOwner(userId, paramId);
 
     await this.prismaService.user.delete({ where: { id: userId } });
+  }
+
+  async isUserOwner(userId: number, paramId: number): Promise<void> {
+    if (userId !== paramId) {
+      throw new UnauthorizedException();
+    }
   }
 }

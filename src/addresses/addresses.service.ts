@@ -33,14 +33,7 @@ export class AddressesService {
     id: number,
     createAddressDto: CreateAddressDto,
   ): Promise<ReturnAddressDto> {
-    const existingAddress = await this.prismaService.address.findFirst({
-      where: { id },
-      select: { userId: true },
-    });
-
-    if (!existingAddress || existingAddress.userId !== userId) {
-      throw new UnauthorizedException();
-    }
+    await this.isAddressOwner(userId, id);
 
     return await this.prismaService.address.update({
       where: { id },
@@ -62,15 +55,19 @@ export class AddressesService {
   }
 
   async delete(userId: number, id: number): Promise<void> {
-    const existingAddress = await this.prismaService.address.findFirst({
-      where: { id },
+    await this.isAddressOwner(userId, id);
+
+    await this.prismaService.address.delete({ where: { id } });
+  }
+
+  async isAddressOwner(userId: number, addressId: number): Promise<void> {
+    const address = await this.prismaService.address.findUnique({
+      where: { id: addressId },
       select: { userId: true },
     });
 
-    if (!existingAddress || existingAddress.userId !== userId) {
-      throw new UnauthorizedException();
+    if (!address || address.userId !== userId) {
+      throw new UnauthorizedException('This address does not exist');
     }
-
-    await this.prismaService.address.delete({ where: { id } });
   }
 }

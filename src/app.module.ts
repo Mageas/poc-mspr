@@ -5,6 +5,7 @@ import { AtGuard, PermissionsGuard } from './auth/common/guards';
 import { UsersModule } from './users/users.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { PlantsModule } from './plants/plants.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { SessionsModule } from './sessions/sessions.module';
     UsersModule,
     AddressesModule,
     SessionsModule,
+    PlantsModule,
   ],
   providers: [
     {

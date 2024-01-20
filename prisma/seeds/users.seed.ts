@@ -1,4 +1,4 @@
-import { Role } from '../role';
+import { UserRole } from '../userRole';
 
 export const users = [
   {
@@ -7,7 +7,7 @@ export const users = [
     roles: {
       create: [
         {
-          name: Role.Owner,
+          name: UserRole.Owner,
         },
       ],
     },
@@ -18,10 +18,10 @@ export const users = [
     roles: {
       create: [
         {
-          name: Role.Owner,
+          name: UserRole.Owner,
         },
         {
-          name: Role.Botanist,
+          name: UserRole.Botanist,
         },
       ],
     },
@@ -32,10 +32,10 @@ export const users = [
     roles: {
       create: [
         {
-          name: Role.Owner,
+          name: UserRole.Owner,
         },
         {
-          name: Role.Gardian,
+          name: UserRole.Gardian,
         },
       ],
     },
@@ -46,10 +46,10 @@ export const users = [
     roles: {
       create: [
         {
-          name: Role.Owner,
+          name: UserRole.Owner,
         },
         {
-          name: Role.Admin,
+          name: UserRole.Admin,
         },
       ],
     },
@@ -60,16 +60,16 @@ export const users = [
     roles: {
       create: [
         {
-          name: Role.Owner,
+          name: UserRole.Owner,
         },
         {
-          name: Role.Botanist,
+          name: UserRole.Botanist,
         },
         {
-          name: Role.Gardian,
+          name: UserRole.Gardian,
         },
         {
-          name: Role.Admin,
+          name: UserRole.Admin,
         },
       ],
     },
