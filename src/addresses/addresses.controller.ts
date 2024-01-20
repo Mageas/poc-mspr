@@ -5,7 +5,7 @@ import { GetCurrentUserId } from 'src/auth/common/decorators';
 
 @Controller('addresses')
 export class AddressesController {
-  constructor(private addressesService: AddressesService) {}
+  constructor(private readonly addressesService: AddressesService) {}
 
   @Post()
   async create(

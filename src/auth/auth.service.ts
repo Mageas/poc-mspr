@@ -10,9 +10,9 @@ import { SessionsService } from 'src/sessions/sessions.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private prismaService: PrismaService,
-    private jwtService: JwtService,
-    private sessionsServices: SessionsService,
+    private readonly prismaService: PrismaService,
+    private readonly jwtService: JwtService,
+    private readonly sessionsServices: SessionsService,
   ) {}
 
   async signup(authDto: AuthDto): Promise<Tokens> {

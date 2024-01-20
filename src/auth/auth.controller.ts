@@ -14,7 +14,7 @@ import { GetCurrentUser, GetCurrentUserId, Public } from './common/decorators';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Post('signup')

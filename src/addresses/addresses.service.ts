@@ -4,7 +4,7 @@ import { CreateAddressDto, ReturnAddressDto } from './dto';
 
 @Injectable()
 export class AddressesService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(
     userId: number,
