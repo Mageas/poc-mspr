@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { users } from './users.seed';
+import { status } from './status.seed';
 import * as bcrypt from 'bcrypt';
+import { species } from './species.seed';
 
 const prisma = new PrismaClient();
 
@@ -14,6 +16,18 @@ async function load() {
           ...user,
           password: await bcrypt.hash(user.password, 10),
         },
+      });
+    });
+
+    status.forEach(async (status) => {
+      await prisma.plantStatus.create({
+        data: status,
+      });
+    });
+
+    species.forEach(async (specie) => {
+      await prisma.plantSpecies.create({
+        data: specie,
       });
     });
   } catch (e) {

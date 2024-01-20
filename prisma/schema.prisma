@@ -80,3 +80,17 @@ model Plant {
 
   @@map("plants")
 }
+
+model PlantStatus {
+  id        Int      @id @default(autoincrement())
+  name      String
+
+  @@map("plant_status")
+}
+
+model PlantSpecies {
+  id        Int      @id @default(autoincrement())
+  name      String
+
+  @@map("plant_species")
+}

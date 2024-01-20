@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { PlantsModule } from './plants/plants.module';
+import { PlantStatusModule } from './plant-status/plant-status.module';
+import { PlantSpeciesModule } from './plant-species/plant-species.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { PlantsModule } from './plants/plants.module';
     AddressesModule,
     SessionsModule,
     PlantsModule,
+    PlantStatusModule,
+    PlantSpeciesModule,
   ],
   providers: [
     {
