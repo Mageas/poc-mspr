@@ -1,0 +1,11 @@
+-- CreateTable
+CREATE TABLE "addresses" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "street" TEXT NOT NULL,
+    "zip" INTEGER NOT NULL,
+    "city" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+    CONSTRAINT "addresses_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

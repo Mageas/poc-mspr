@@ -3,9 +3,10 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AtGuard, PermissionsGuard } from './auth/common/guards';
 import { UsersModule } from './users/users.module';
+import { AddressesModule } from './addresses/addresses.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, UsersModule],
+  imports: [AuthModule, PrismaModule, UsersModule, AddressesModule],
   providers: [
     {
       provide: 'APP_GUARD',
