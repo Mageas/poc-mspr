@@ -4,7 +4,7 @@ import { AuthDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { AccessToken, Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from 'prisma/role';
+import { UserRole } from 'prisma/userRole';
 import { SessionsService } from 'src/sessions/sessions.service';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class AuthService {
     const newUserRoles = await this.prismaService.role.create({
       data: {
         userId: newUser.id,
-        name: Role.Owner,
+        name: UserRole.Owner,
       },
       select: {
         name: true,
