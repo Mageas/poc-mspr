@@ -7,6 +7,10 @@ import { JwtService } from '@nestjs/jwt';
 import { UserRole } from 'prisma/userRole';
 import { SessionsService } from 'src/sessions/sessions.service';
 
+const select = {
+  name: true,
+};
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -37,9 +41,7 @@ export class AuthService {
         userId: newUser.id,
         name: UserRole.Owner,
       },
-      select: {
-        name: true,
-      },
+      select,
     });
 
     const userRoles = [newUserRoles.name];
@@ -64,9 +66,7 @@ export class AuthService {
       },
       include: {
         roles: {
-          select: {
-            name: true,
-          },
+          select,
         },
       },
     });
@@ -101,9 +101,7 @@ export class AuthService {
       },
       include: {
         roles: {
-          select: {
-            name: true,
-          },
+          select,
         },
       },
     });

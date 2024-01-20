@@ -3,17 +3,19 @@ import { UpdateUserDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 
+const select = {
+  id: true,
+  email: true,
+  roles: true,
+};
+
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findAll() {
     const users = await this.prismaService.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        roles: true,
-      },
+      select,
     });
 
     return users.map((user) => ({
@@ -25,11 +27,7 @@ export class UsersService {
   async findOne(userId: number) {
     const user = await this.prismaService.user.findUnique({
       where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        roles: true,
-      },
+      select,
     });
 
     const roles = user.roles.map((role) => role.name);
@@ -47,6 +45,7 @@ export class UsersService {
     await this.prismaService.user.update({
       where: { id: userId },
       data: updateUserDto,
+      select,
     });
   }
 

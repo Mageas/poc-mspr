@@ -6,6 +6,11 @@ import { AddressesService } from 'src/addresses/addresses.service';
 import { PlantStatusService } from 'src/plant-status/plant-status.service';
 import { PlantSpeciesService } from 'src/plant-species/plant-species.service';
 
+const select = {
+  id: true,
+  name: true,
+};
+
 @Injectable()
 export class PlantsService {
   constructor(
@@ -34,10 +39,7 @@ export class PlantsService {
         status: { connect: { id: +createPlantDto.statusId } },
         species: { connect: { id: +createPlantDto.speciesId } },
       },
-      select: {
-        id: true,
-        name: true,
-      },
+      select,
     });
   }
 
@@ -66,10 +68,7 @@ export class PlantsService {
     return this.prismaService.plant.update({
       where: { id: plantId },
       data: { name: updatePlantDto.name },
-      select: {
-        id: true,
-        name: true,
-      },
+      select,
     });
   }
 
