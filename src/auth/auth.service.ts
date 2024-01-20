@@ -5,12 +5,14 @@ import * as bcrypt from 'bcrypt';
 import { AccessToken, Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from 'prisma/role';
+import { SessionsService } from 'src/sessions/sessions.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
+    private sessionsServices: SessionsService,
   ) {}
 
   async signup(authDto: AuthDto): Promise<Tokens> {
@@ -89,17 +91,7 @@ export class AuthService {
   }
 
   async logout(userId: number) {
-    await this.prismaService.user.updateMany({
-      where: {
-        id: userId,
-        refreshToken: {
-          not: null,
-        },
-      },
-      data: {
-        refreshToken: null,
-      },
-    });
+    await this.sessionsServices.delete(userId);
   }
 
   async refreshTokens(userId: number, rt: string): Promise<AccessToken> {
@@ -116,10 +108,12 @@ export class AuthService {
       },
     });
 
-    if (!user || !user.refreshToken)
+    const session = await this.sessionsServices.findByUserId(userId);
+
+    if (!user || !session.token)
       throw new ForbiddenException('Invalid credentials');
 
-    const isRtValid = await bcrypt.compare(rt, user.refreshToken);
+    const isRtValid = await bcrypt.compare(rt, session.token);
     if (!isRtValid) throw new ForbiddenException('Invalid credentials');
 
     const userRoles = user.roles.map((role) => role.name);
@@ -131,14 +125,7 @@ export class AuthService {
 
   private async updateRtHash(userId: number, rt: string) {
     const hash = await this.hashData(rt);
-    await this.prismaService.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        refreshToken: hash,
-      },
-    });
+    await this.sessionsServices.findOrCreate(userId, hash);
   }
 
   private hashData(data: string) {
