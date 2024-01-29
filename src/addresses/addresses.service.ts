@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAddressDto, ReturnAddressDto } from './dto';
 
-const select = {
+export const addressesSelect = {
   id: true,
   street: true,
   city: true,
@@ -10,7 +10,7 @@ const select = {
 };
 
 @Injectable()
-export class AddressesService {
+export class AddressService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(
@@ -26,7 +26,7 @@ export class AddressesService {
           },
         },
       },
-      select,
+      select: addressesSelect,
     });
   }
 
@@ -47,7 +47,7 @@ export class AddressesService {
           },
         },
       },
-      select,
+      select: addressesSelect,
     });
   }
 

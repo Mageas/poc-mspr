@@ -2,20 +2,28 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePlantDto, ReturnPlantDto } from './dto';
 import { UpdatePlantDto } from './dto/updatePlantDto';
-import { AddressesService } from 'src/addresses/addresses.service';
+import {
+  AddressService,
+  addressesSelect,
+} from 'src/addresses/addresses.service';
 import { PlantStatusService } from 'src/plant-statuses/plant-statuses.service';
 import { PlantSpeciesService } from 'src/plant-species/plant-species.service';
 
-const select = {
+export const plantsSelect = {
   id: true,
   name: true,
+  species: { select: { id: true, name: true } },
+  status: { select: { id: true, name: true } },
+  address: {
+    select: addressesSelect,
+  },
 };
 
 @Injectable()
 export class PlantsService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly addressesService: AddressesService,
+    private readonly addressesService: AddressService,
     private readonly plantStatusService: PlantStatusService,
     private readonly plantSpeciesService: PlantSpeciesService,
   ) {}
@@ -39,7 +47,7 @@ export class PlantsService {
         status: { connect: { id: +createPlantDto.statusId } },
         species: { connect: { id: +createPlantDto.speciesId } },
       },
-      select,
+      select: plantsSelect,
     });
   }
 
@@ -68,7 +76,7 @@ export class PlantsService {
     return this.prismaService.plant.update({
       where: { id: plantId },
       data: { name: updatePlantDto.name },
-      select,
+      select: plantsSelect,
     });
   }
 

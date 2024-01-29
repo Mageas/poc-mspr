@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
-import { AddressesService } from './addresses.service';
+import { AddressService } from './addresses.service';
 import { CreateAddressDto, ReturnAddressDto } from './dto';
 import { GetCurrentUserId } from 'src/auth/common/decorators';
 
 @Controller('addresses')
-export class AddressesController {
-  constructor(private readonly addressesService: AddressesService) {}
+export class AddressController {
+  constructor(private readonly addressesService: AddressService) {}
 
   @Post()
   async create(

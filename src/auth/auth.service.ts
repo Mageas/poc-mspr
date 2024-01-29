@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserRole } from 'prisma/userRole';
 import { SessionsService } from 'src/sessions/sessions.service';
 
-const select = {
+export const authSelect = {
   name: true,
 };
 
@@ -41,7 +41,7 @@ export class AuthService {
         userId: newUser.id,
         name: UserRole.Owner,
       },
-      select,
+      select: authSelect,
     });
 
     const userRoles = [newUserRoles.name];
@@ -66,7 +66,7 @@ export class AuthService {
       },
       include: {
         roles: {
-          select,
+          select: authSelect,
         },
       },
     });
@@ -101,7 +101,7 @@ export class AuthService {
       },
       include: {
         roles: {
-          select,
+          select: authSelect,
         },
       },
     });
